@@ -1,6 +1,7 @@
 import {Component} from 'react'
 import './App.css'
 import {v4} from 'uuid'
+import TagItem from './components/tagItem'
 
 // These are the lists used in the application. You can move them to any component needed.
 
@@ -48,8 +49,8 @@ class App extends Component {
     this.setState({tag: event.target.value})
   }
 
-  onClickTag = event => {
-    const categoryClicked = event.target.value
+  onClickTag = value => {
+    const categoryClicked = value
     const {category} = this.state
     if (category === '' || category !== categoryClicked) {
       this.setState({category: categoryClicked})
@@ -60,7 +61,7 @@ class App extends Component {
 
   onSubmitForm = event => {
     event.preventDefault()
-    const {text, tag, tasks} = this.state
+    const {text, tag} = this.state
     const newItem = {
       id: v4(),
       text,
@@ -71,12 +72,11 @@ class App extends Component {
       text: '',
       tag: tagsList[0].displayText,
     }))
-    console.log(tasks)
   }
 
   render() {
     const {text, tag, tasks, category} = this.state
-    const filteredTasks = tasks.filter(item => item.tag === category)
+    const filteredTasks = tasks.filter(item => item.tag.includes(category))
     return (
       <div>
         <div>
@@ -105,11 +105,7 @@ class App extends Component {
           <h1>Tags</h1>
           <ul>
             {tagsList.map(tag1 => (
-              <li id={tag1.optionId}>
-                <button type="button" onClick={this.onClickTag}>
-                  {tag1.displayText}
-                </button>
-              </li>
+              <TagItem details={tag1} key={tag1.optionId} />
             ))}
           </ul>
           <h1>Tasks</h1>
